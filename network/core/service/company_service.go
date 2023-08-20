@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
 	"manager/network/core/domain/dto"
 	"manager/network/core/port"
@@ -60,7 +61,16 @@ func (o *CompanyService) Get(dtoIn *dto.CompanyDtoIn) (*dto.CompanyDtoOut, error
 	dtoOut.ShortName = Company.ShortName
 	dtoOut.Document = Company.Document
 	dtoOut.Telephone = Company.Telephone
-	dtoOut.Address = Company.Address
+
+	addressValue, err := Company.Address.Value()
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal([]byte(addressValue.(string)), &dtoOut.Address)
+	if err != nil {
+		return nil, err
+	}
 
 	if Company.CreationDateTime != nil {
 		dtoOut.CreationDateTime = DateHelper.Format("Y-m-d H:i:s", *Company.CreationDateTime)
@@ -89,7 +99,14 @@ func (o *CompanyService) GetAll(conditions ...interface{}) []*dto.CompanyDtoOut 
 		dtoOut.ShortName = Company.ShortName
 		dtoOut.Document = Company.Document
 		dtoOut.Telephone = Company.Telephone
-		dtoOut.Address = Company.Address
+
+		addressValue, _ := Company.Address.Value()
+		// if err != nil {
+		// 	return nil, err
+		// }
+
+		// dtoOut.Address = addressValue.(string)
+		_ = json.Unmarshal([]byte(addressValue.(string)), &dtoOut.Address)
 
 		if Company.CreationDateTime != nil {
 			dtoOut.CreationDateTime = DateHelper.Format("Y-m-d H:i:s", *Company.CreationDateTime)
@@ -106,6 +123,7 @@ func (o *CompanyService) GetAll(conditions ...interface{}) []*dto.CompanyDtoOut 
 
 func (o *CompanyService) Save(dtoIn *dto.CompanyDtoIn) error {
 
+	var err error
 	Company := FactoryCompany()
 	DateHelper := helper.NewDateHelper()
 
@@ -118,7 +136,12 @@ func (o *CompanyService) Save(dtoIn *dto.CompanyDtoIn) error {
 	Company.ShortName = dtoIn.ShortName
 	Company.Document = dtoIn.Document
 	Company.Telephone = dtoIn.Telephone
-	Company.Address = dtoIn.Address
+
+	addressBytes, err := json.Marshal(dtoIn.Address)
+	if err != nil {
+		return err
+	}
+	Company.Address.Scan(addressBytes)
 
 	now := time.Now()
 
@@ -147,7 +170,7 @@ func (o *CompanyService) Save(dtoIn *dto.CompanyDtoIn) error {
 		Company.ChangeDateTime = ChangeDateTime
 	}
 
-	_, err := o.ucSave.Execute(Company)
+	_, err = o.ucSave.Execute(Company)
 	if err != nil {
 		return err
 	}
