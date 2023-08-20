@@ -18,49 +18,41 @@ func NewCompanyUseCaseGrid(repository port.CompanyIRepository) *CompanyUseCaseGr
 
 func (o *CompanyUseCaseGrid) table() string {
 
-	return "sale.company"
+	return "network.company"
 }
 
 func (o *CompanyUseCaseGrid) columns() []string {
 
 	return []string{
 		"id",
-		"id_company",
-		"id_person",
-		"id_origin_registration",
+		"name",
+		"short_name",
 		"document",
-		"email",
-		"ddd",
 		"telephone",
-		"active",
-		"notification_key",
-		"more_infor",
+		"address",
 	}
 }
 
 func (o *CompanyUseCaseGrid) mandatory() []string {
 
-	return []string{
-		"document",
-		"email",
-	}
+	return []string{}
 }
 
 func (o *CompanyUseCaseGrid) searchFields() map[string]string {
 
 	return map[string]string{
-		"name":     "string",
-		"document": "string",
-		"email":    "string",
+		"name":       "string",
+		"short_name": "string",
+		"document":   "string",
 	}
 }
 
 func (o *CompanyUseCaseGrid) orderFields() map[string]string {
 
 	return map[string]string{
-		"name":     "string",
-		"document": "string",
-		"email":    "string",
+		"name":       "string",
+		"short_name": "string",
+		"document":   "string",
 	}
 }
 
@@ -78,7 +70,7 @@ func (o *CompanyUseCaseGrid) Execute(GridConfig *grid.GridConfig) (data map[stri
 	params := prepare["params"].(*grid.Params)
 	orders := prepare["orders"].(*grid.Orders)
 
-	where = append(where, "(status <> 'DELETED')")
+	// where = append(where, "(status <> 'DELETED')")
 
 	if len(params.ToString()) > 0 {
 		where = append(where, params.ToString())
