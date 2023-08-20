@@ -10,7 +10,7 @@ import (
 
 const (
 	svcName    = "manager-network"
-	svcVersion = "0.0.1"
+	svcVersion = "0.0.2"
 )
 
 // func ConfigCheckAccess(sr *resource.ServerResource) port.ICheckAccessService {
