@@ -1,0 +1,19 @@
+package constant
+
+//ERR => Error	HDR => Handler	EPT => End Point
+//Current Score => H:66  P:295
+
+const (
+	//MODULE: NETWORK
+
+	HDR_COMPANY            = "H0001"
+	HDR_EPT_COMPANY_GET    = "P0001"
+	HDR_EPT_COMPANY_SAVE   = "P0002"
+	HDR_EPT_COMPANY_GRID   = "P0003"
+	HDR_EPT_COMPANY_GETALL = "P0004"
+	HDR_EPT_COMPANY_CREATE = "P0005"
+	HDR_EPT_COMPANY_REMOVE = "P0006"
+
+	//MODULE: ACCESS
+
+)
