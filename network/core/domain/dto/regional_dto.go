@@ -1,7 +1,8 @@
 package dto
 
-type CompanyDtoIn struct {
+type RegionalDtoIn struct {
 	Id               string
+	IdParent         string
 	Name             string
 	ShortName        string
 	Document         string
@@ -16,10 +17,11 @@ type CompanyDtoIn struct {
 	ChangeDateTime   string
 }
 
-func NewCompanyDtoIn() *CompanyDtoIn {
+func NewRegionalDtoIn() *RegionalDtoIn {
 
-	return &CompanyDtoIn{
+	return &RegionalDtoIn{
 		Id:               "",
+		IdParent:         "",
 		Name:             "",
 		ShortName:        "",
 		Document:         "",
@@ -35,8 +37,9 @@ func NewCompanyDtoIn() *CompanyDtoIn {
 	}
 }
 
-type CompanyDtoOut struct {
+type RegionalDtoOut struct {
 	Id               string
+	IdParent         string
 	Name             string
 	ShortName        string
 	Document         string
@@ -51,10 +54,11 @@ type CompanyDtoOut struct {
 	ChangeDateTime   string
 }
 
-func NewCompanyDtoOut() *CompanyDtoOut {
+func NewRegionalDtoOut() *RegionalDtoOut {
 
-	return &CompanyDtoOut{
+	return &RegionalDtoOut{
 		Id:               "",
+		IdParent:         "",
 		Name:             "",
 		ShortName:        "",
 		Document:         "",

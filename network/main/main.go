@@ -10,7 +10,7 @@ import (
 
 const (
 	svcName    = "manager-network"
-	svcVersion = "0.0.2"
+	svcVersion = "0.0.3"
 )
 
 // func ConfigCheckAccess(sr *resource.ServerResource) port.ICheckAccessService {
@@ -43,6 +43,11 @@ func main() {
 
 	//Register Handlers
 	sr.AddHandler(adapter.NewCompanyHandlerRest(sr))
+	sr.AddHandler(adapter.NewRegionalHandlerRest(sr))
+	sr.AddHandler(adapter.NewSellerHandlerRest(sr))
+	sr.AddHandler(adapter.NewNetworkStatusHandlerRest(sr))
+	sr.AddHandler(adapter.NewDocumentTypeHandlerRest(sr))
+	sr.AddHandler(adapter.NewPersonTypeHandlerRest(sr))
 
 	sr.Run(ctx)
 }

@@ -7,24 +7,25 @@ import (
 	"strings"
 )
 
-type CompanyUseCaseGrid struct {
+type RegionalUseCaseGrid struct {
 	grid.Grid
-	repository port.CompanyIRepository
+	repository port.RegionalIRepository
 }
 
-func NewCompanyUseCaseGrid(repository port.CompanyIRepository) *CompanyUseCaseGrid {
-	return &CompanyUseCaseGrid{repository: repository}
+func NewRegionalUseCaseGrid(repository port.RegionalIRepository) *RegionalUseCaseGrid {
+	return &RegionalUseCaseGrid{repository: repository}
 }
 
-func (o *CompanyUseCaseGrid) table() string {
+func (o *RegionalUseCaseGrid) table() string {
 
-	return "network.company"
+	return "network.regional"
 }
 
-func (o *CompanyUseCaseGrid) columns() []string {
+func (o *RegionalUseCaseGrid) columns() []string {
 
 	return []string{
 		"id",
+		"id_parent",
 		"name",
 		"short_name",
 		"document",
@@ -37,12 +38,12 @@ func (o *CompanyUseCaseGrid) columns() []string {
 	}
 }
 
-func (o *CompanyUseCaseGrid) mandatory() []string {
+func (o *RegionalUseCaseGrid) mandatory() []string {
 
 	return []string{}
 }
 
-func (o *CompanyUseCaseGrid) searchFields() map[string]string {
+func (o *RegionalUseCaseGrid) searchFields() map[string]string {
 
 	return map[string]string{
 		"name":          "string",
@@ -54,7 +55,7 @@ func (o *CompanyUseCaseGrid) searchFields() map[string]string {
 	}
 }
 
-func (o *CompanyUseCaseGrid) orderFields() map[string]string {
+func (o *RegionalUseCaseGrid) orderFields() map[string]string {
 
 	return map[string]string{
 		"name":          "string",
@@ -66,7 +67,7 @@ func (o *CompanyUseCaseGrid) orderFields() map[string]string {
 	}
 }
 
-func (o *CompanyUseCaseGrid) Execute(GridConfig *grid.GridConfig) (data map[string]interface{}, err error) {
+func (o *RegionalUseCaseGrid) Execute(GridConfig *grid.GridConfig) (data map[string]interface{}, err error) {
 
 	var sql string = ""
 	var order string = ""

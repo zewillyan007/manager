@@ -20,5 +20,4 @@ func (o *CompanyUseCaseGet) Execute(id int64) (*entity.Company, error) {
 	} else {
 		return nil, err
 	}
-
 }

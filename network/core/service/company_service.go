@@ -7,7 +7,6 @@ import (
 	"manager/network/core/port"
 	"manager/network/core/usecase"
 	"manager/shared/grid"
-	"manager/shared/helper"
 	port_shared "manager/shared/port"
 	"manager/shared/types"
 	"strconv"
@@ -53,14 +52,17 @@ func (o *CompanyService) Get(dtoIn *dto.CompanyDtoIn) (*dto.CompanyDtoOut, error
 		return nil, err
 	}
 
-	DateHelper := helper.NewDateHelper()
 	dtoOut := dto.NewCompanyDtoOut()
 
 	dtoOut.Id = fmt.Sprintf("%d", Company.Id)
 	dtoOut.Name = Company.Name
 	dtoOut.ShortName = Company.ShortName
 	dtoOut.Document = Company.Document
+	dtoOut.DocumentType = Company.DocumentType
 	dtoOut.Telephone = Company.Telephone
+	dtoOut.Email = Company.Email
+	dtoOut.Status = Company.Status
+	dtoOut.Type = Company.Type
 
 	addressValue, err := Company.Address.Value()
 	if err != nil {
@@ -72,12 +74,16 @@ func (o *CompanyService) Get(dtoIn *dto.CompanyDtoIn) (*dto.CompanyDtoOut, error
 		return nil, err
 	}
 
+	if Company.Birthday != nil {
+		dtoOut.Birthday = Company.Birthday.Format("2006-01-02 15:04:05")
+	}
+
 	if Company.CreationDateTime != nil {
-		dtoOut.CreationDateTime = DateHelper.Format("Y-m-d H:i:s", *Company.CreationDateTime)
+		dtoOut.CreationDateTime = Company.CreationDateTime.Format("2006-01-02 15:04:05")
 	}
 
 	if Company.ChangeDateTime != nil {
-		dtoOut.ChangeDateTime = DateHelper.Format("Y-m-d H:i:s", *Company.ChangeDateTime)
+		dtoOut.ChangeDateTime = Company.ChangeDateTime.Format("2006-01-02 15:04:05")
 	}
 
 	return dtoOut, nil
@@ -91,29 +97,35 @@ func (o *CompanyService) GetAll(conditions ...interface{}) []*dto.CompanyDtoOut 
 
 	for _, Company := range arrayCompany {
 
-		DateHelper := helper.NewDateHelper()
 		dtoOut := dto.NewCompanyDtoOut()
 
 		dtoOut.Id = fmt.Sprintf("%d", Company.Id)
 		dtoOut.Name = Company.Name
 		dtoOut.ShortName = Company.ShortName
 		dtoOut.Document = Company.Document
+		dtoOut.DocumentType = Company.DocumentType
 		dtoOut.Telephone = Company.Telephone
+		dtoOut.Email = Company.Email
+		dtoOut.Status = Company.Status
+		dtoOut.Type = Company.Type
 
 		addressValue, _ := Company.Address.Value()
 		// if err != nil {
 		// 	return nil, err
 		// }
 
-		// dtoOut.Address = addressValue.(string)
 		_ = json.Unmarshal([]byte(addressValue.(string)), &dtoOut.Address)
 
+		if Company.Birthday != nil {
+			dtoOut.Birthday = Company.Birthday.Format("2006-01-02 15:04:05")
+		}
+
 		if Company.CreationDateTime != nil {
-			dtoOut.CreationDateTime = DateHelper.Format("Y-m-d H:i:s", *Company.CreationDateTime)
+			dtoOut.CreationDateTime = Company.CreationDateTime.Format("2006-01-02 15:04:05")
 		}
 
 		if Company.ChangeDateTime != nil {
-			dtoOut.ChangeDateTime = DateHelper.Format("Y-m-d H:i:s", *Company.ChangeDateTime)
+			dtoOut.ChangeDateTime = Company.ChangeDateTime.Format("2006-01-02 15:04:05")
 		}
 
 		arrayCompanyDto = append(arrayCompanyDto, dtoOut)
@@ -125,7 +137,6 @@ func (o *CompanyService) Save(dtoIn *dto.CompanyDtoIn) error {
 
 	var err error
 	Company := FactoryCompany()
-	DateHelper := helper.NewDateHelper()
 
 	if len(dtoIn.Id) > 0 {
 		id, _ := strconv.Atoi(dtoIn.Id)
@@ -135,13 +146,25 @@ func (o *CompanyService) Save(dtoIn *dto.CompanyDtoIn) error {
 	Company.Name = dtoIn.Name
 	Company.ShortName = dtoIn.ShortName
 	Company.Document = dtoIn.Document
+	Company.DocumentType = dtoIn.DocumentType
 	Company.Telephone = dtoIn.Telephone
+	Company.Email = dtoIn.Email
+	Company.Status = dtoIn.Status
+	Company.Type = dtoIn.Type
 
 	addressBytes, err := json.Marshal(dtoIn.Address)
 	if err != nil {
 		return err
 	}
 	Company.Address.Scan(addressBytes)
+
+	if len(dtoIn.Birthday) > 0 {
+		birthday, err := time.Parse("2006-01-02 15:04:05", dtoIn.Birthday)
+		if err != nil {
+			return err
+		}
+		Company.Birthday = &birthday
+	}
 
 	now := time.Now()
 
@@ -153,21 +176,21 @@ func (o *CompanyService) Save(dtoIn *dto.CompanyDtoIn) error {
 			Company.CreationDateTime = CompanyCurrent.CreationDateTime
 		}
 	} else {
-		CreationDateTime, err := DateHelper.Parse("Y-m-d H:i:s", dtoIn.CreationDateTime)
+		CreationDateTime, err := time.Parse("2006-01-02 15:04:05", dtoIn.CreationDateTime)
 		if err != nil {
 			return err
 		}
-		Company.CreationDateTime = CreationDateTime
+		Company.CreationDateTime = &CreationDateTime
 	}
 
 	if len(dtoIn.ChangeDateTime) == 0 {
 		Company.ChangeDateTime = &now
 	} else {
-		ChangeDateTime, err := DateHelper.Parse("Y-m-d H:i:s", dtoIn.ChangeDateTime)
+		ChangeDateTime, err := time.Parse("2006-01-02 15:04:05", dtoIn.ChangeDateTime)
 		if err != nil {
 			return err
 		}
-		Company.ChangeDateTime = ChangeDateTime
+		Company.ChangeDateTime = &ChangeDateTime
 	}
 
 	_, err = o.ucSave.Execute(Company)

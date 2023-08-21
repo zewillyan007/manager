@@ -20,5 +20,4 @@ func (o *CompanyUseCaseSave) Execute(Company *entity.Company) (*entity.Company, 
 	} else {
 		return nil, err
 	}
-
 }

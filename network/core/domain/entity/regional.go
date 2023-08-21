@@ -5,8 +5,9 @@ import (
 	"time"
 )
 
-type Company struct {
+type Regional struct {
 	Id               int64           `json:"id"`
+	IdParent         int64           `json:"id_parent"`
 	Name             string          `json:"name"`
 	ShortName        string          `json:"short_name"`
 	Document         string          `json:"document"`
@@ -21,9 +22,10 @@ type Company struct {
 	ChangeDateTime   *time.Time      `json:"change_data_time"`
 }
 
-func NewCompany() *Company {
-	return &Company{
+func NewRegional() *Regional {
+	return &Regional{
 		Id:               0,
+		IdParent:         0,
 		Name:             "",
 		ShortName:        "",
 		Document:         "",
@@ -39,14 +41,14 @@ func NewCompany() *Company {
 	}
 }
 
-func (ent *Company) GetId() int64 {
+func (ent *Regional) GetId() int64 {
 	return ent.Id
 }
 
-func (ent *Company) SetId(id int64) {
+func (ent *Regional) SetId(id int64) {
 	ent.Id = id
 }
 
-func (ent *Company) IsValid() error {
+func (ent *Regional) IsValid() error {
 	return nil
 }
