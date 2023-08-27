@@ -18,6 +18,6 @@ func (o *CompanyUseCaseGet) Execute(id int64) (*entity.Company, error) {
 	if i, err := o.repository.Get(id); err == nil && i != nil {
 		return i.(*entity.Company), nil
 	} else {
-		return nil, err //oieeee
+		return nil, err
 	}
 }
